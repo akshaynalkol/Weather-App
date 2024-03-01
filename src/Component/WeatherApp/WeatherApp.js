@@ -24,12 +24,22 @@ export default function WeatherApp() {
     let api_key = '5e9d83f6c8c8a1f65783de9f7df6e6c9';
 
     const search = async (e) => {
+        
         if (inputVal === '') {
             return null;
         }
 
-        let res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&units=Metric&appid=${api_key}`)
-        // console.log(res.data);
+        let res;
+        try{
+            res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&units=Metric&appid=${api_key}`)
+            // console.log(res.data); 
+        }
+        catch(error){
+            // console.log(error);
+            alert('Incorrect Input...');
+            setInputVal('');
+            return 0; 
+        } 
 
         setTemp(res.data.main.temp);
         setLocation(res.data.name);
@@ -65,19 +75,18 @@ export default function WeatherApp() {
     return (
         <>
             <div className='container'>
-                {/* <h1 className='fw-bold text-center my-1' style={{color:'#3b2f80'}}>Weather App</h1> */}
-                <div className='row justify-content-center mt-5'>
-                    <div className='col-5'>
-
+                <h1 className='fw-bold text-center my-4 display-5' style={{color:'#3b2f80'}}>Weather App</h1>
+                <div className='row justify-content-center'>
+                    <div className='col-lg-5 col-md-7 col-sm-9'>
                         <div className='box'>
                             <div className='top-bar d-flex justify-content-center'>
-                                <input type='text' className='form-control w-75 ps-4 me-2' id='name' placeholder='Search' value={inputVal} onChange={(e) => setInputVal(e.target.value)} />
+                                <input type='search' className='form-control w-75 px-4 me-2' id='name' placeholder='Search' value={inputVal} onChange={(e) => setInputVal(e.target.value)} />
                                 <div className='d-flex justify-content-center align-items-center p-3 bg-white' onClick={(e) => search(e)}>
                                     <img src={search_icon} alt='Search Icon' />
                                 </div>
                             </div>
                             <div className='text-center text-white my-2'>
-                                <img src={wIcon} alt='Cloud Icon' />
+                                <img src={wIcon} alt='Cloud Icon'/>   
                                 <h1 className='fw-bold display-5 mb-0'>{temp}<sup>0</sup>C</h1>
                                 <h4 className='fw-bold mb-0'>{location}</h4>
                             </div>
